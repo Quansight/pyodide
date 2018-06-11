@@ -77,6 +77,9 @@ TORNADO_LIBS=$(TORNADO_ROOT)/__init__.py
 PACKAGING_ROOT=packaging/packaging-17.1/build/lib/packaging
 PACKAGING_LIBS=$(PACKAGING_ROOT)/__init__.py
 
+JINJA2_ROOT=jinja2/Jinja2-2.10/build/lib/jinja2
+JINJA2_LIBS=$(JINJA2_ROOT)/__init__.py
+
 SITEPACKAGES=root/lib/python$(PYMINOR)/site-packages
 
 all: build/pyodide.asm.js \
@@ -191,6 +194,7 @@ root/.built: \
 		$(PYYAML_LIBS) \
 		$(TORNADO_LIBS) \
 		$(PACKAGING_LIBS) \
+		$(JINJA2_LIBS) \
 		src/sitecustomize.py \
 		src/webbrowser.py \
 		src/pyodide.py \
@@ -206,6 +210,7 @@ root/.built: \
 	cp $(PYYAML_LIBS) $(SITEPACKAGES)
 	cp $(TORNADO_LIBS) $(SITEPACKAGES)
 	cp $(PACKAGING_LIBS) $(SITEPACKAGES)
+	cp $(JINJA2_LIBS) $(SITEPACKAGES)
 	cp src/sitecustomize.py $(SITEPACKAGES)
 	cp src/webbrowser.py root/lib/python$(PYMINOR)
 	cp src/_testcapi.py	root/lib/python$(PYMINOR)
@@ -269,6 +274,9 @@ $(TORNADO_LIBS): $(CPYTHONLIB)
 
 $(PACKAGING_LIBS): $(CPTHONLIB)
 	make -C packaging
+
+$(JINJA2_LIBS): $(CPYTHONLIB)
+	make -C jinja2
 
 emsdk/emsdk/emsdk:
 	make -C emsdk
