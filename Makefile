@@ -86,7 +86,6 @@ all: build/pyodide.asm.js \
 	build/pytz.data \
 	build/pandas.data \
 	build/matplotlib.data \
-	build/yaml.data
 
 
 build/pyodide.asm.js: src/main.bc src/jsimport.bc src/jsproxy.bc src/js2python.bc \
@@ -177,15 +176,13 @@ build/pandas.data: $(PANDAS_LIBS)
 build/matplotlib.data: $(MATPLOTLIB_LIBS)
 	python2 $(FILEPACKAGER) build/matplotlib.data --preload $(MATPLOTLIB_ROOT)@/lib/python3.6/site-packages/matplotlib --js-output=build/matplotlib.js --export-name=pyodide --exclude \*.wasm.pre --exclude __pycache__
 
-build/yaml.data: $(PYYAML_LIBS)
-	python2 $(FILEPACKAGER) build/yaml.data --preload $(PYYAML_LIBS)@/lib/python3.6/site-packages/yaml --js-output=build/yaml.js --export-name=pyodide --exclude \*wasm.pre --exclude __pycache__
-
 root/.built: \
 		$(CPYTHONLIB) \
 		$(SIX_LIBS) \
 		$(PYPARSING_LIBS) \
 		$(CYCLER_LIBS) \
 		$(KIWISOLVER_LIBS) \
+		$(PYYAML_LIBS) \
 		src/sitecustomize.py \
 		src/webbrowser.py \
 		src/pyodide.py \
@@ -198,6 +195,7 @@ root/.built: \
 	cp $(PYPARSING_LIBS) $(SITEPACKAGES)
 	cp $(CYCLER_LIBS) $(SITEPACKAGES)
 	cp $(KIWISOLVER_LIBS) $(SITEPACKAGES)
+	cp $(PYYAML_LIBS) $(SITEPACKAGES)
 	cp src/sitecustomize.py $(SITEPACKAGES)
 	cp src/webbrowser.py root/lib/python$(PYMINOR)
 	cp src/_testcapi.py	root/lib/python$(PYMINOR)
