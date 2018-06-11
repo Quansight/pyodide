@@ -74,6 +74,9 @@ PYYAML_LIBS=$(PYYAML_ROOT)/__init__.py
 TORNADO_ROOT=tornado/tornado-5.0.2/build/lib.$(PLATFORMSLUG)/tornado
 TORNADO_LIBS=$(TORNADO_ROOT)/__init__.py
 
+PACKAGING_ROOT=packaging/packaging-17.1/build/lib/packaging
+PACKAGING_LIBS=$(PACKAGING_ROOT)/__init__.py
+
 SITEPACKAGES=root/lib/python$(PYMINOR)/site-packages
 
 all: build/pyodide.asm.js \
@@ -187,6 +190,7 @@ root/.built: \
 		$(KIWISOLVER_LIBS) \
 		$(PYYAML_LIBS) \
 		$(TORNADO_LIBS) \
+		$(PACKAGING_LIBS) \
 		src/sitecustomize.py \
 		src/webbrowser.py \
 		src/pyodide.py \
@@ -201,6 +205,7 @@ root/.built: \
 	cp $(KIWISOLVER_LIBS) $(SITEPACKAGES)
 	cp $(PYYAML_LIBS) $(SITEPACKAGES)
 	cp $(TORNADO_LIBS) $(SITEPACKAGES)
+	cp $(PACKAGING_LIBS) $(SITEPACKAGES)
 	cp src/sitecustomize.py $(SITEPACKAGES)
 	cp src/webbrowser.py root/lib/python$(PYMINOR)
 	cp src/_testcapi.py	root/lib/python$(PYMINOR)
@@ -261,6 +266,9 @@ $(PYYAML_LIBS): $(CPYTHONLIB)
 
 $(TORNADO_LIBS): $(CPYTHONLIB)
 	make -C tornado
+
+$(PACKAGING_LIBS): $(CPTHONLIB)
+	make -C packaging
 
 emsdk/emsdk/emsdk:
 	make -C emsdk
