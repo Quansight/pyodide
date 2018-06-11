@@ -10,6 +10,7 @@ var languagePluginLoader = new Promise((resolve, reject) => {
     ////////////////////////////////////////////////////////////
     // Package loading
     const packages = {
+        'yaml':[],
         'dateutil': [],
         'matplotlib': ['numpy', 'dateutil', 'pytz'],
         'numpy': [],
