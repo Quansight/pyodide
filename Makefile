@@ -80,6 +80,9 @@ PACKAGING_LIBS=$(PACKAGING_ROOT)/__init__.py
 JINJA2_ROOT=jinja2/Jinja2-2.10/build/lib/jinja2
 JINJA2_LIBS=$(JINJA2_ROOT)/__init__.py
 
+BOKEH_ROOT=bokeh/bokeh-0.12.16/build/lib/bokeh
+BOKEH_LIBS=$(BOKEH_ROOT)/__init__.py
+
 SITEPACKAGES=root/lib/python$(PYMINOR)/site-packages
 
 all: build/pyodide.asm.js \
@@ -95,6 +98,7 @@ all: build/pyodide.asm.js \
 	build/pytz.data \
 	build/pandas.data \
 	build/matplotlib.data \
+	build/bokeh.data \
 
 
 build/pyodide.asm.js: src/main.bc src/jsimport.bc src/jsproxy.bc src/js2python.bc \
@@ -185,6 +189,9 @@ build/pandas.data: $(PANDAS_LIBS)
 build/matplotlib.data: $(MATPLOTLIB_LIBS)
 	python2 $(FILEPACKAGER) build/matplotlib.data --preload $(MATPLOTLIB_ROOT)@/lib/python3.6/site-packages/matplotlib --js-output=build/matplotlib.js --export-name=pyodide --exclude \*.wasm.pre --exclude __pycache__
 
+build/bokeh.data: $(BOKEH_LIBS)
+	python2 $(FILEPACKAGER) build/bokeh.data --preload $(BOKEH_ROOT)@/lib/python3.6/site-packages/bokeh --js-output=build/bokeh.js --export-name=pyodide --exclude \*.wasm.pre --exclude __pycache__
+
 root/.built: \
 		$(CPYTHONLIB) \
 		$(SIX_LIBS) \
@@ -242,6 +249,8 @@ $(PANDAS_LIBS): $(NUMPY_LIBS)
 $(MATPLOTLIB_LIBS): $(NUMPY_LIBS)
 	make -C matplotlib
 
+$(BOKEH_LIBS): $(NUMPY_LIBS)
+	make -C bokeh
 
 $(DATEUTIL_LIBS): $(CPYTHONLIB)
 	make -C dateutil
