@@ -15,6 +15,11 @@ var languagePluginLoader = new Promise((resolve, reject) => {
         'numpy': [],
         'pandas': ['numpy', 'dateutil', 'pytz'],
         'pytz': [],
+        'bokeh': ['numpy', 'dateutil', 'pytz', 'jinja2', 'packaging', 'yaml', 'tornado'],
+        'jinja2': [],
+        'packaging': [],
+        'yaml': [],
+        'tornado': []
     };
     let loadedPackages = new Set();
     let loadPackage = (names) => {

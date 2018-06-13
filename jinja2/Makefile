@@ -6,7 +6,7 @@ JINJA2VERSION=2.10
 ROOT=$(abspath .)
 
 SRC=$(ROOT)/Jinja2-$(JINJA2VERSION)
-BUILD=$(SRC)/jinja2
+BUILD=$(SRC)/build/lib/jinja2
 TARBALL=$(ROOT)/downloads/Jinja2-$(JINJA2VERSION).tar.gz
 URL=https://files.pythonhosted.org/packages/56/e6/332789f295cf22308386cf5bbd1f4e00ed11484299c5d7383378cf48ba47/Jinja2-2.10.tar.gz
 

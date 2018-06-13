@@ -68,10 +68,10 @@ CYCLER_LIBS=$(CYCLER_ROOT)/cycler.py
 KIWISOLVER_ROOT=kiwisolver/build
 KIWISOLVER_LIBS=$(KIWISOLVER_ROOT)/kiwisolver.so
 
-PYYAML_ROOT=yaml/PyYAML-3.12/build/lib.$(PLATFORMSLUG)/yaml
+PYYAML_ROOT=yaml/build
 PYYAML_LIBS=$(PYYAML_ROOT)/__init__.py
 
-TORNADO_ROOT=tornado/tornado-5.0.2/build/lib.$(PLATFORMSLUG)/tornado
+TORNADO_ROOT=tornado/build
 TORNADO_LIBS=$(TORNADO_ROOT)/__init__.py
 
 PACKAGING_ROOT=packaging/packaging-17.1/build/lib/packaging
@@ -101,6 +101,11 @@ all: build/pyodide.asm.js \
 	build/pandas.data \
 	build/matplotlib.data \
 	build/bokeh.data \
+	build/tornado.data \
+	build/packaging.data \
+	build/yaml.data \
+	build/jinja2.data
+
 
 
 
@@ -199,16 +204,25 @@ build/matplotlib.data: $(MATPLOTLIB_LIBS)
 build/bokeh.data: $(BOKEH_LIBS)
 	python2 $(FILEPACKAGER) build/bokeh.data --preload $(BOKEH_ROOT)@/lib/python3.6/site-packages/bokeh --js-output=build/bokeh.js --export-name=pyodide --exclude \*.wasm.pre --exclude __pycache__
 
+build/tornado.data: $(TORNADO_LIBS)
+	python2 $(FILEPACKAGER) build/tornado.data --preload $(TORNADO_ROOT)@/lib/python3.6/site-packages/tornado --js-output=build/tornado.js --export-name=pyodide --exclude \*.wasm.pre --exclude __pycache__
+
+build/packaging.data: $(PACKAGING_LIBS)
+	python2 $(FILEPACKAGER) build/packaging.data --preload $(PACKAGING_ROOT)@/lib/python3.6/site-packages/packaging --js-output=build/packaging.js --export-name=pyodide --exclude \*.wasm.pre --exclude __pycache__
+
+build/yaml.data: $(PYYAML_LIBS)
+	python2 $(FILEPACKAGER) build/yaml.data --preload $(PYYAML_ROOT)@/lib/python3.6/site-packages/yaml --js-output=build/yaml.js --export-name=pyodide --exclude \*.wasm.pre --exclude __pycache__
+
+build/jinja2.data: $(JINJA2_LIBS)
+	python2 $(FILEPACKAGER) build/jinja2.data --preload $(JINJA2_ROOT)@/lib/python3.6/site-packages/jinja2 --js-output=build/jinja2.js --export-name=pyodide --exclude \*.wasm.pre --exclude __pycache__
+
+	
 root/.built: \
 		$(CPYTHONLIB) \
 		$(SIX_LIBS) \
 		$(PYPARSING_LIBS) \
 		$(CYCLER_LIBS) \
 		$(KIWISOLVER_LIBS) \
-		$(PYYAML_LIBS) \
-		$(TORNADO_LIBS) \
-		$(PACKAGING_LIBS) \
-		$(JINJA2_LIBS) \
 		src/sitecustomize.py \
 		src/webbrowser.py \
 		src/pyodide.py \
@@ -221,10 +235,6 @@ root/.built: \
 	cp $(PYPARSING_LIBS) $(SITEPACKAGES)
 	cp $(CYCLER_LIBS) $(SITEPACKAGES)
 	cp $(KIWISOLVER_LIBS) $(SITEPACKAGES)
-	cp $(PYYAML_LIBS) $(SITEPACKAGES)
-	cp $(TORNADO_LIBS) $(SITEPACKAGES)
-	cp $(PACKAGING_LIBS) $(SITEPACKAGES)
-	cp $(JINJA2_LIBS) $(SITEPACKAGES)
 	cp src/sitecustomize.py $(SITEPACKAGES)
 	cp src/webbrowser.py root/lib/python$(PYMINOR)
 	cp src/_testcapi.py	root/lib/python$(PYMINOR)

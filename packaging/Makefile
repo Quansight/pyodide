@@ -6,7 +6,7 @@ PACKAGINGVERSION=17.1
 ROOT=$(abspath .)
 
 SRC=$(ROOT)/packaging-$(PACKAGINGVERSION)
-BUILD=$(SRC)/packaging
+BUILD=$(SRC)/build/lib/packaging
 TARBALL=$(ROOT)/downloads/packaging-$(PACKAGINGVERSION).tar.gz
 URL=https://files.pythonhosted.org/packages/77/32/439f47be99809c12ef2da8b60a2c47987786d2c6c9205549dd6ef95df8bd/packaging-$(PACKAGINGVERSION).tar.gz
 
