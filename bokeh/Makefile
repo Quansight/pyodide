@@ -28,7 +28,7 @@ $(SRC)/setup.py: $(TARBALL)
 $(BUILD)/__init__.py: $(ROOT)/.patched
 	( \
 		cd $(SRC) ; \
-		$(HOSTPYTHON) setup.py build ; \
+		$(HOSTPYTHON) setup.py build --install-js ; \
 		touch $(BUILD)/__init__.py \
 	)
 

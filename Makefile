@@ -90,8 +90,10 @@ all: build/pyodide.asm.js \
 	build/pyodide.js \
 	build/pyodide_dev.js \
 	build/python.html \
+	build/iodide.pyodide-20180605-testlocal.js \
 	build/matplotlib.html \
 	build/matplotlib-sideload.html \
+	build/bokeh.html \
 	build/renderedhtml.css \
 	build/numpy.data \
 	build/dateutil.data \
@@ -99,6 +101,7 @@ all: build/pyodide.asm.js \
 	build/pandas.data \
 	build/matplotlib.data \
 	build/bokeh.data \
+
 
 
 build/pyodide.asm.js: src/main.bc src/jsimport.bc src/jsproxy.bc src/js2python.bc \
@@ -117,21 +120,25 @@ build/pyodide.asm.data: root/.built
 
 build/pyodide_dev.js: src/pyodide.js
 	cp $< $@
-	sed -i -e "s#{{DEPLOY}}##g" $@
+	sed -i -e 's\{{DEPLOY}}\\g' $@
 
 
 build/pyodide.js: src/pyodide.js
 	cp $< $@
-	sed -i -e 's#{{DEPLOY}}#https://iodide.io/pyodide-demo/#g' $@
+	sed -i -e 's\{{DEPLOY}}\https://hoo761.github.io/pyodide-test-host/\g' $@
 
 
 build/python.html: src/python.html
 	cp $< $@
 
+build/iodide.pyodide-20180605-testlocal.js: src/iodide.pyodide-20180605-testlocal.js
+	cp $< $@
 
 build/matplotlib.html: src/matplotlib.html
 	cp $< $@
 
+build/bokeh.html: src/bokeh.html
+	cp $< $@
 
 build/matplotlib-sideload.html: src/matplotlib-sideload.html
 	cp $< $@
@@ -281,7 +288,7 @@ $(PYYAML_LIBS): $(CPYTHONLIB)
 $(TORNADO_LIBS): $(CPYTHONLIB)
 	make -C tornado
 
-$(PACKAGING_LIBS): $(CPTHONLIB)
+$(PACKAGING_LIBS): $(CPYTHONLIB)
 	make -C packaging
 
 $(JINJA2_LIBS): $(CPYTHONLIB)
