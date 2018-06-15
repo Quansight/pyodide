@@ -1,0 +1,16 @@
+--- Jinja2-2.10/jinja2/utils.py	2017-10-31 15:10:24.000000000 -0500
++++ Jinja2-2.10.bak/jinja2/utils.py	2018-06-14 13:53:46.874485479 -0500
+@@ -12,7 +12,12 @@
+ import json
+ import errno
+ from collections import deque
+-from threading import Lock
++
++try:
++    from threading import Lock
++except ImportError:
++    from dummy_threading import Lock
++
+ from jinja2._compat import text_type, string_types, implements_iterator, \
+      url_quote
+ 

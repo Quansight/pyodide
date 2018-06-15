@@ -22,6 +22,7 @@ clean:
 	-rm -fr downloads
 	-rm -fr $(HOSTROOT)
 	-rm -fr $(BUILD)
+	-rm -fr $(HOSTDIR)
 
 
 $(TARBALL):

@@ -83,6 +83,9 @@ JINJA2_LIBS=$(JINJA2_ROOT)/__init__.py
 BOKEH_ROOT=bokeh/bokeh-0.12.16/build/lib/bokeh
 BOKEH_LIBS=$(BOKEH_ROOT)/__init__.py
 
+MARKUPSAFE_ROOT=markupsafe/build/markupsafe
+MARKUPSAFE_LIBS=$(MARKUPSAFE_ROOT)/__init__.py
+
 SITEPACKAGES=root/lib/python$(PYMINOR)/site-packages
 
 all: build/pyodide.asm.js \
@@ -104,7 +107,8 @@ all: build/pyodide.asm.js \
 	build/tornado.data \
 	build/packaging.data \
 	build/yaml.data \
-	build/jinja2.data
+	build/jinja2.data \
+	build/markupsafe.data
 
 
 
@@ -216,6 +220,9 @@ build/yaml.data: $(PYYAML_LIBS)
 build/jinja2.data: $(JINJA2_LIBS)
 	python2 $(FILEPACKAGER) build/jinja2.data --preload $(JINJA2_ROOT)@/lib/python3.6/site-packages/jinja2 --js-output=build/jinja2.js --export-name=pyodide --exclude \*.wasm.pre --exclude __pycache__
 
+build/markupsafe.data: $(MARKUPSAFE_LIBS)
+	python2 $(FILEPACKAGER) build/markupsafe.data --preload $(MARKUPSAFE_ROOT)@/lib/python3.6/site-packages/markupsafe --js-output=build/markupsafe.js --export-name=pyodide --exclude \*.wasm.pre --exclude __pycache__
+
 	
 root/.built: \
 		$(CPYTHONLIB) \
@@ -303,6 +310,9 @@ $(PACKAGING_LIBS): $(CPYTHONLIB)
 
 $(JINJA2_LIBS): $(CPYTHONLIB)
 	make -C jinja2
+
+$(MARKUPSAFE_LIBS): $(CPYTHONLIb)
+	make -C markupsafe
 
 emsdk/emsdk/emsdk:
 	make -C emsdk

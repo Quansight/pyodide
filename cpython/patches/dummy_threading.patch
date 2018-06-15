@@ -1,0 +1,16 @@
+--- Python-3.6.4/Lib/concurrent/futures/_base.py	2017-12-18 22:53:56.000000000 -0600
++++ Python-3.6.4.bak/Lib/concurrent/futures/_base.py	2018-06-14 19:35:11.860596579 -0500
+@@ -5,7 +5,12 @@
+ 
+ import collections
+ import logging
+-import threading
++
++try:
++    import threading
++except ImportError:
++    import dummy_threading as threading
++
+ import time
+ 
+ FIRST_COMPLETED = 'FIRST_COMPLETED'
