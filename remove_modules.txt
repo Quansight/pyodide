@@ -5,7 +5,6 @@ dbm
 ensurepip
 idlelib
 lib2to3
-multiprocessing
 sqlite3
 tkinter
 turtle.py

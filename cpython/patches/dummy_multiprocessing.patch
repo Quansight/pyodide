@@ -1,0 +1,146 @@
+diff -ru Python-3.6.4/Lib/multiprocessing/context.py Python-3.6.4.bak/Lib/multiprocessing/context.py
+--- Python-3.6.4/Lib/multiprocessing/context.py	2017-12-18 22:53:56.000000000 -0600
++++ Python-3.6.4.bak/Lib/multiprocessing/context.py	2018-06-15 11:34:34.429175583 -0500
+@@ -1,6 +1,10 @@
+ import os
+ import sys
+-import threading
++
++try:
++    import threading
++except ImportError:
++    import dummy_threading as threading
+ 
+ from . import process
+ from . import reduction
+diff -ru Python-3.6.4/Lib/concurrent/futures/process.py Python-3.6.4.bak/Lib/concurrent/futures/process.py
+--- Python-3.6.4/Lib/concurrent/futures/process.py	2017-12-18 22:53:56.000000000 -0600
++++ Python-3.6.4.bak/Lib/concurrent/futures/process.py	2018-06-15 12:01:59.321363856 -0500
+@@ -50,10 +50,21 @@
+ from concurrent.futures import _base
+ import queue
+ from queue import Full
+-import multiprocessing
++
++try:
++    import multiprocessing
++except ImportError:
++    import multiprocessing.dummy as multiprocessing
++
+ from multiprocessing import SimpleQueue
+ from multiprocessing.connection import wait
+-import threading
++
++try:
++    import threading
++except ImportError:
++    import dummy_threading as threading
++
++
+ import weakref
+ from functools import partial
+ import itertools
+diff -ru Python-3.6.4/Lib/concurrent/futures/thread.py Python-3.6.4.bak/Lib/concurrent/futures/thread.py
+--- Python-3.6.4/Lib/concurrent/futures/thread.py	2017-12-18 22:53:56.000000000 -0600
++++ Python-3.6.4.bak/Lib/concurrent/futures/thread.py	2018-06-15 12:00:07.235240268 -0500
+@@ -9,7 +9,12 @@
+ from concurrent.futures import _base
+ import itertools
+ import queue
+-import threading
++
++try:
++    import threading
++except ImportError:
++    import dummy_threading as threading
++    
+ import weakref
+ import os
+ 
+diff -ru Python-3.6.4/Lib/multiprocessing/connection.py Python-3.6.4.bak/Lib/multiprocessing/connection.py
+--- Python-3.6.4/Lib/multiprocessing/connection.py	2017-12-18 22:53:56.000000000 -0600
++++ Python-3.6.4.bak/Lib/multiprocessing/connection.py	2018-06-15 12:01:18.710040491 -0500
+@@ -18,7 +18,10 @@
+ import tempfile
+ import itertools
+ 
+-import _multiprocessing
++try:
++    import _multiprocessing
++except ImportError:
++    import multiprocessing.dummy as _multiprocessing
+ 
+ from . import util
+
+diff -ru Python-3.6.4/Lib/multiprocessing/dummy/__init__.py Python-3.6.4.bak/Lib/multiprocessing/dummy/__init__.py
+--- Python-3.6.4/Lib/multiprocessing/dummy/__init__.py	2017-12-18 22:53:56.000000000 -0600
++++ Python-3.6.4.bak/Lib/multiprocessing/dummy/__init__.py	2018-06-15 12:34:06.323069097 -0500
+@@ -17,7 +17,11 @@
+ # Imports
+ #
+ 
+-import threading
++try:
++    import threading
++except ImportError:
++    import dummy_threading as threading
++
+ import sys
+ import weakref
+ import array
+diff -ru Python-3.6.4/Lib/multiprocessing/connection.py Python-3.6.4.bak/Lib/multiprocessing/connection.py
+--- Python-3.6.4/Lib/multiprocessing/connection.py	2018-06-15 13:07:32.068377060 -0500
++++ Python-3.6.4.bak/Lib/multiprocessing/connection.py	2018-06-15 13:18:15.868369283 -0500
+@@ -19,9 +19,9 @@
+ import itertools
+ 
+ try:
+-    import _multiprocessing
++    import multiprocessing
+ except ImportError:
+-    import multiprocessing.dummy as _multiprocessing
++    import multiprocessing.dummy as multiprocessing
+ 
+ from . import util
+ 
+@@ -355,10 +355,10 @@
+     """
+ 
+     if _winapi:
+-        def _close(self, _close=_multiprocessing.closesocket):
++        def _close(self, _close=multiprocessing.closesocket):
+             _close(self._handle)
+-        _write = _multiprocessing.send
+-        _read = _multiprocessing.recv
++        _write = multiprocessing.send
++        _read = multiprocessing.recv
+     else:
+         def _close(self, _close=os.close):
+             _close(self._handle)
+diff -ru Python-3.6.4/Lib/multiprocessing/dummy/__init__.py Python-3.6.4.bak/Lib/multiprocessing/dummy/__init__.py
+--- Python-3.6.4/Lib/multiprocessing/dummy/__init__.py	2018-06-15 13:07:32.068377060 -0500
++++ Python-3.6.4.bak/Lib/multiprocessing/dummy/__init__.py	2018-06-15 13:18:35.236033703 -0500
+@@ -27,8 +27,14 @@
+ import array
+ 
+ from .connection import Pipe
+-from threading import Lock, RLock, Semaphore, BoundedSemaphore
+-from threading import Event, Condition, Barrier
++try:
++    from threading import Lock, RLock, Semaphore, BoundedSemaphore
++except ImportError:
++    from dummy_threading import Lock, Rlock, Semaphore, BoundedSemaphore
++try:
++    from threading import Event, Condition, Barrier
++except ImportError:
++    from dummy_threading import Event, Condition, Barrier
+ from queue import Queue
+ 
+ #
+@@ -120,4 +126,4 @@
+     from ..pool import ThreadPool
+     return ThreadPool(processes, initializer, initargs)
+ 
+-JoinableQueue = Queue
++JoinableQueue = Queue
+\ No newline at end of file
