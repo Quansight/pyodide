@@ -144,3 +144,201 @@ diff -ru Python-3.6.4/Lib/multiprocessing/dummy/__init__.py Python-3.6.4.bak/Lib
 -JoinableQueue = Queue
 +JoinableQueue = Queue
 \ No newline at end of file
+diff -ru Python-3.6.4/Lib/multiprocessing/forkserver.py Python-3.6.4.bak/Lib/multiprocessing/forkserver.py
+--- Python-3.6.4/Lib/multiprocessing/forkserver.py	2017-12-18 22:53:56.000000000 -0600
++++ Python-3.6.4.bak/Lib/multiprocessing/forkserver.py	2018-06-15 13:51:40.115510497 -0500
+@@ -5,7 +5,10 @@
+ import socket
+ import struct
+ import sys
+-import threading
++try:
++    import threading
++except ImportError:
++    import dummy_threading as threading
+ 
+ from . import connection
+ from . import process
+diff -ru Python-3.6.4/Lib/multiprocessing/heap.py Python-3.6.4.bak/Lib/multiprocessing/heap.py
+--- Python-3.6.4/Lib/multiprocessing/heap.py	2017-12-18 22:53:56.000000000 -0600
++++ Python-3.6.4.bak/Lib/multiprocessing/heap.py	2018-06-15 13:51:36.479556483 -0500
+@@ -12,7 +12,10 @@
+ import os
+ import sys
+ import tempfile
+-import threading
++try:
++    import threading
++except ImportError:
++    import dummy_threading as threading
+ 
+ from .context import reduction, assert_spawning
+ from . import util
+diff -ru Python-3.6.4/Lib/multiprocessing/managers.py Python-3.6.4.bak/Lib/multiprocessing/managers.py
+--- Python-3.6.4/Lib/multiprocessing/managers.py	2017-12-18 22:53:56.000000000 -0600
++++ Python-3.6.4.bak/Lib/multiprocessing/managers.py	2018-06-15 13:51:32.811602823 -0500
+@@ -15,7 +15,10 @@
+ #
+ 
+ import sys
+-import threading
++try:
++    import threading
++except ImportError:
++    import dummy_threading as threading
+ import array
+ import queue
+ 
+diff -ru Python-3.6.4/Lib/multiprocessing/pool.py Python-3.6.4.bak/Lib/multiprocessing/pool.py
+--- Python-3.6.4/Lib/multiprocessing/pool.py	2017-12-18 22:53:56.000000000 -0600
++++ Python-3.6.4.bak/Lib/multiprocessing/pool.py	2018-06-15 13:51:27.559669082 -0500
+@@ -12,8 +12,10 @@
+ #
+ # Imports
+ #
+-
+-import threading
++try:
++    import threading
++except ImportError:
++    import dummy_threading as threading
+ import queue
+ import itertools
+ import collections
+diff -ru Python-3.6.4/Lib/multiprocessing/queues.py Python-3.6.4.bak/Lib/multiprocessing/queues.py
+--- Python-3.6.4/Lib/multiprocessing/queues.py	2017-12-18 22:53:56.000000000 -0600
++++ Python-3.6.4.bak/Lib/multiprocessing/queues.py	2018-06-15 13:51:12.535858023 -0500
+@@ -11,7 +11,10 @@
+ 
+ import sys
+ import os
+-import threading
++try:
++    import threading
++except ImportError:
++    import dummy_threading as threading
+ import collections
+ import time
+ import weakref
+diff -ru Python-3.6.4/Lib/multiprocessing/resource_sharer.py Python-3.6.4.bak/Lib/multiprocessing/resource_sharer.py
+--- Python-3.6.4/Lib/multiprocessing/resource_sharer.py	2017-12-18 22:53:56.000000000 -0600
++++ Python-3.6.4.bak/Lib/multiprocessing/resource_sharer.py	2018-06-15 13:51:05.515945994 -0500
+@@ -12,7 +12,10 @@
+ import signal
+ import socket
+ import sys
+-import threading
++try:
++    import threading
++except ImportError:
++    import dummy_threading as threading
+ 
+ from . import process
+ from .context import reduction
+diff -ru Python-3.6.4/Lib/multiprocessing/semaphore_tracker.py Python-3.6.4.bak/Lib/multiprocessing/semaphore_tracker.py
+--- Python-3.6.4/Lib/multiprocessing/semaphore_tracker.py	2017-12-18 22:53:56.000000000 -0600
++++ Python-3.6.4.bak/Lib/multiprocessing/semaphore_tracker.py	2018-06-15 13:51:02.679981478 -0500
+@@ -14,7 +14,10 @@
+ import os
+ import signal
+ import sys
+-import threading
++try:
++    import threading
++except ImportError:
++    import dummy_threading as threading
+ import warnings
+ import _multiprocessing
+ 
+diff -ru Python-3.6.4/Lib/multiprocessing/synchronize.py Python-3.6.4.bak/Lib/multiprocessing/synchronize.py
+--- Python-3.6.4/Lib/multiprocessing/synchronize.py	2017-12-18 22:53:56.000000000 -0600
++++ Python-3.6.4.bak/Lib/multiprocessing/synchronize.py	2018-06-15 13:50:52.296111111 -0500
+@@ -11,7 +11,10 @@
+     'Lock', 'RLock', 'Semaphore', 'BoundedSemaphore', 'Condition', 'Event'
+     ]
+ 
+-import threading
++try:
++    import threading
++except ImportError:
++    import dummy_threading as threading
+ import sys
+ import tempfile
+ import _multiprocessing
+diff -ru Python-3.6.4/Lib/multiprocessing/util.py Python-3.6.4.bak/Lib/multiprocessing/util.py
+--- Python-3.6.4/Lib/multiprocessing/util.py	2017-12-18 22:53:56.000000000 -0600
++++ Python-3.6.4.bak/Lib/multiprocessing/util.py	2018-06-15 13:50:25.560442772 -0500
+@@ -12,8 +12,11 @@
+ import sys
+ import weakref
+ import atexit
+-import threading        # we want threading to install it's
+-                        # cleanup function before multiprocessing does
++try:
++    import threading        # we want threading to install it's
++except ImportError:          # cleanup function before multiprocessing does
++    import dummy_threading as threading
++                       
+ from subprocess import _args_from_interpreter_flags
+ 
+ from . import process
+diff -ru Python-3.6.4/Lib/asyncio/base_events.py Python-3.6.4.bak/Lib/asyncio/base_events.py
+--- Python-3.6.4/Lib/asyncio/base_events.py	2017-12-18 22:53:56.000000000 -0600
++++ Python-3.6.4.bak/Lib/asyncio/base_events.py	2018-06-15 14:02:57.790342093 -0500
+@@ -22,7 +22,10 @@
+ import os
+ import socket
+ import subprocess
+-import threading
++try:
++    import threading
++except ImportError:
++    import dummy_threading as threading
+ import time
+ import traceback
+ import sys
+diff -ru Python-3.6.4/Lib/asyncio/events.py Python-3.6.4.bak/Lib/asyncio/events.py
+--- Python-3.6.4/Lib/asyncio/events.py	2017-12-18 22:53:56.000000000 -0600
++++ Python-3.6.4.bak/Lib/asyncio/events.py	2018-06-15 14:03:26.421938130 -0500
+@@ -16,7 +16,10 @@
+ import socket
+ import subprocess
+ import sys
+-import threading
++try:
++    import threading
++except ImportError:
++    import dummy_threading as threading
+ import traceback
+ 
+ from . import compat
+diff -ru Python-3.6.4/Lib/asyncio/test_utils.py Python-3.6.4.bak/Lib/asyncio/test_utils.py
+--- Python-3.6.4/Lib/asyncio/test_utils.py	2017-12-18 22:53:56.000000000 -0600
++++ Python-3.6.4.bak/Lib/asyncio/test_utils.py	2018-06-15 14:03:54.865536036 -0500
+@@ -10,7 +10,10 @@
+ import socketserver
+ import sys
+ import tempfile
+-import threading
++try:
++    import threading
++except ImportError:
++    import dummy_threading as threading
+ import time
+ import unittest
+ import weakref
+diff -ru Python-3.6.4/Lib/asyncio/unix_events.py Python-3.6.4.bak/Lib/asyncio/unix_events.py
+--- Python-3.6.4/Lib/asyncio/unix_events.py	2017-12-18 22:53:56.000000000 -0600
++++ Python-3.6.4.bak/Lib/asyncio/unix_events.py	2018-06-15 14:04:05.481385773 -0500
+@@ -7,7 +7,10 @@
+ import stat
+ import subprocess
+ import sys
+-import threading
++try:
++    import threading
++except ImportError:
++    import dummy_threading as threading
+ import warnings
+ 
+ 

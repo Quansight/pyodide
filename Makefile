@@ -86,6 +86,12 @@ BOKEH_LIBS=$(BOKEH_ROOT)/__init__.py
 MARKUPSAFE_ROOT=markupsafe/build/markupsafe
 MARKUPSAFE_LIBS=$(MARKUPSAFE_ROOT)/__init__.py
 
+SETUPTOOLS_ROOT=setuptools/build/lib/setuptools
+SETUPTOOLS_LIBS=$(SETUPTOOLS_ROOT)/__init__.py
+
+PKG_RESOURCES_ROOT=setuptools/build/lib/pkg_resources
+PKG_RESOURCES_LIBS=$(PKG_RESOURCES_ROOT)/__init__.py
+
 SITEPACKAGES=root/lib/python$(PYMINOR)/site-packages
 
 all: build/pyodide.asm.js \
@@ -108,7 +114,9 @@ all: build/pyodide.asm.js \
 	build/packaging.data \
 	build/yaml.data \
 	build/jinja2.data \
-	build/markupsafe.data
+	build/markupsafe.data \
+	build/setuptools.data \
+	build/pkg_resources.data
 
 
 
@@ -223,6 +231,12 @@ build/jinja2.data: $(JINJA2_LIBS)
 build/markupsafe.data: $(MARKUPSAFE_LIBS)
 	python2 $(FILEPACKAGER) build/markupsafe.data --preload $(MARKUPSAFE_ROOT)@/lib/python3.6/site-packages/markupsafe --js-output=build/markupsafe.js --export-name=pyodide --exclude \*.wasm.pre --exclude __pycache__
 
+build/setuptools.data: $(SETUPTOOLS_LIBS)
+	python2 $(FILEPACKAGER) build/setuptools.data --preload $(SETUPTOOLS_ROOT)@/lib/python3.6/site-packages/setuptools --js-output=build/setuptools.js --export-name=pyodide --exclude \*.wasm.pre --exclude __pycache__
+
+build/pkg_resources.data: $(PKG_RESOURCES_LIBS)
+	python2 $(FILEPACKAGER) build/pkg_resources.data --preload $(PKG_RESOURCES_ROOT)@/lib/python3.6/site-packages/pkg_resources --js-output=build/pkg_resources.js --export-name=pyodide --exclude \*.wasm.pre --exclude __pycache__
+
 	
 root/.built: \
 		$(CPYTHONLIB) \
@@ -311,8 +325,13 @@ $(PACKAGING_LIBS): $(CPYTHONLIB)
 $(JINJA2_LIBS): $(CPYTHONLIB)
 	make -C jinja2
 
-$(MARKUPSAFE_LIBS): $(CPYTHONLIb)
+$(MARKUPSAFE_LIBS): $(CPYTHONLIB)
 	make -C markupsafe
+
+$(SETUPTOOLS_LIBS): $(CPYTHONLIB)
+	make -C setuptools
+
+$(PKG_RESOURCES_LIBS): $(SETUPTOOLS_LIBS)
 
 emsdk/emsdk/emsdk:
 	make -C emsdk
