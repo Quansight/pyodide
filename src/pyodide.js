@@ -12,7 +12,7 @@ var languagePluginLoader = new Promise((resolve, reject) => {
     // Package loading
     const packages = {
         'dateutil': [],
-        'matplotlib': ['numpy', 'dateutil', 'pytz'],
+        'matplotlib': ['numpy', 'dateutil', 'pytz', 'kiwisolver'],
         'numpy': [],
         'pandas': ['numpy', 'dateutil', 'pytz'],
         'pytz': [],
@@ -23,14 +23,12 @@ var languagePluginLoader = new Promise((resolve, reject) => {
         'tornado': [],
         'markupsafe': [],
         'setuptools': [],
-        'pkg_resources': []
+        'pkg_resources': [],
+        'test': [],
+        'kiwisolver': []
     };
     let loadedPackages = new Set();
     let loadPackage = (names) => {
-        if (Array.isArray(names)) {
-            names = [names];
-        }
-
     let promise = new Promise((resolve, reject) => {
       if (toLoad.size === 0) {
         resolve('No new packages to load');
