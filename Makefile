@@ -110,7 +110,7 @@ all: build/pyodide.asm.js \
 	build/pytz.data \
 	build/pandas.data \
 	build/matplotlib.data \
-	build/kiwisolver.data
+	build/kiwisolver.data \
 	build/bokeh.data \
 	build/tornado.data \
 	build/packaging.data \
