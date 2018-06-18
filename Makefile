@@ -104,11 +104,13 @@ all: build/pyodide.asm.js \
 	build/matplotlib-sideload.html \
 	build/bokeh.html \
 	build/renderedhtml.css \
+  	build/test.data \
 	build/numpy.data \
 	build/dateutil.data \
 	build/pytz.data \
 	build/pandas.data \
 	build/matplotlib.data \
+	build/kiwisolver.data
 	build/bokeh.data \
 	build/tornado.data \
 	build/packaging.data \
@@ -173,6 +175,11 @@ test: all build/test.html
 	py.test test -v
 
 
+lint:
+	flake8 src
+	flake8 test
+	clang-format -output-replacements-xml src/*.c src/*.h src/*.js | (! grep '<replacement ')
+
 benchmark: all build/test.html
 	python benchmark/benchmark.py $(HOSTPYTHON) build/benchmarks.json
 	python benchmark/plot_benchmark.py build/benchmarks.json build/benchmarks.png
@@ -216,6 +223,14 @@ build/matplotlib.data: $(MATPLOTLIB_LIBS)
 build/bokeh.data: $(BOKEH_LIBS)
 	python2 $(FILEPACKAGER) build/bokeh.data --preload $(BOKEH_ROOT)@/lib/python3.6/site-packages/bokeh --js-output=build/bokeh.js --export-name=pyodide --exclude \*.wasm.pre --exclude __pycache__
 
+build/kiwisolver.data: $(KIWISOLVER_LIBS)
+	python2 $(FILEPACKAGER) build/kiwisolver.data --preload kiwisolver/build@/lib/python3.6/site-packages --js-output=build/kiwisolver.js --export-name=pyodide --exclude \*.wasm.pre --exclude __pycache__
+
+
+build/test.data: $(CPYTHONLIB)
+	python2 $(FILEPACKAGER) build/test.data --preload $(CPYTHONLIB)/test@/lib/python3.6/test --js-output=build/test.js --export-name=pyodide --exclude \*.wasm.pre --exclude __pycache__
+
+
 build/tornado.data: $(TORNADO_LIBS)
 	python2 $(FILEPACKAGER) build/tornado.data --preload $(TORNADO_ROOT)@/lib/python3.6/site-packages/tornado --js-output=build/tornado.js --export-name=pyodide --exclude \*.wasm.pre --exclude __pycache__
 
@@ -243,11 +258,9 @@ root/.built: \
 		$(SIX_LIBS) \
 		$(PYPARSING_LIBS) \
 		$(CYCLER_LIBS) \
-		$(KIWISOLVER_LIBS) \
 		src/sitecustomize.py \
 		src/webbrowser.py \
 		src/pyodide.py \
-		src/wasm_backend.py \
 		remove_modules.txt
 	rm -rf root
 	mkdir -p root/lib
@@ -255,17 +268,16 @@ root/.built: \
 	cp $(SIX_LIBS) $(SITEPACKAGES)
 	cp $(PYPARSING_LIBS) $(SITEPACKAGES)
 	cp $(CYCLER_LIBS) $(SITEPACKAGES)
-	cp $(KIWISOLVER_LIBS) $(SITEPACKAGES)
 	cp src/sitecustomize.py $(SITEPACKAGES)
 	cp src/webbrowser.py root/lib/python$(PYMINOR)
 	cp src/_testcapi.py	root/lib/python$(PYMINOR)
 	cp src/pystone.py root/lib/python$(PYMINOR)
 	cp src/pyodide.py root/lib/python$(PYMINOR)/site-packages
-	cp src/wasm_backend.py root/lib/python$(PYMINOR)/site-packages
 	( \
 		cd root/lib/python$(PYMINOR); \
 		rm -fr `cat ../../../remove_modules.txt`; \
 		rm encodings/mac_*.py; \
+		rm -fr test; \
 		find . -name "*.wasm.pre" -type f -delete ; \
 		find -type d -name __pycache__ -prune -exec rm -rf {} \; \
 	)
